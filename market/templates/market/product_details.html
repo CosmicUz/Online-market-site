@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="uz">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.title }}</title>
+
+    <link rel="stylesheet" href="{% static 'css/detail.css' %}">
+</head>
+
+<body>
+
+    <header class="detail-header">
+        <a href="{% url 'main' %}" class="back-btn">⬅ Orqaga</a>
+        <h2 class="detail-logo">MyDo'kon</h2>
+    </header>
+
+    <div class="detail-wrapper">
+        <div class="detail-container">
+
+            <div class="product-header">
+                <h1>{{ product.title }}</h1>
+                <p class="product-date">
+                    Chop etilgan sana: {{ product.publish|date:"d M Y" }}
+                </p>
+            </div>
+
+            <div class="product-main">
+                <div class="product-image">
+                    <img src="{{ product.img.url }}" alt="{{ product.title }}">
+                </div>
+
+                <div class="product-info">
+                    <p class="price">
+                        {{ product.price }} {{ product.currency }}
+                    </p>
+
+                    <p class="short-description">
+                        {{ product.short_description }}
+                    </p>
+
+                    <h3>Xususiyatlari:</h3>
+                    <ul class="features-list">
+                        {% for fv in feature_values %}
+                            <li><strong>{{ fv.feature.name }}:</strong> {{ fv.value }}</li>
+                        {% empty %}
+                            <li>Bu mahsulot uchun xususiyatlar mavjud emas.</li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="{% static 'js/detail.js' %}"></script>
+
+</body>
+</html>

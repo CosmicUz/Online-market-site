@@ -1,0 +1,17 @@
+<div id="cartModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Savat</h2>
+        <ul id="cartItems">
+            {% for item in cart.items.all %}
+            <li>
+                {{ item.product.title }} x {{ item.quantity }} = {{ item.subtotal }} {{ item.product.currency }}
+                <button class="remove-item" data-id="{{ item.id }}">X</button>
+            </li>
+            {% empty %}
+            <li>Savat bo'sh</li>
+            {% endfor %}
+        </ul>
+        <p>Jami: <span id="cartTotal">{{ cart.total_price }}</span></p>
+    </div>
+</div>

@@ -1,0 +1,136 @@
+{% load static %}
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Online Do'kon</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+  <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+  <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="top-left">
+      <div class="leftcol">
+        <div class="hamburger" id="hamburger">
+          <div class="icon">☰</div>
+          <div class="text">Menyu</div>
+        </div>
+      </div>
+      <div class="logo">
+        <img src="{% static 'img/logo.jpg' %}" alt="Logo">
+        <div class="brand">MyDo'kon</div>
+      </div>
+    </div>
+
+    <div class="top-center">
+      <select class="category" id="categorySelect" name="category">
+        {% for cat in categories %}
+              {% if not cat.parent %}
+                  <option value="{{ cat.id }}">{{ cat.name }}</option>
+
+                  {% for sub in cat.children.all %}
+                      <option value="{{ sub.id }}">-- {{ sub.name }}</option>
+                  {% endfor %}
+              {% endif %}
+          {% endfor %}
+      </select>
+
+      <div class="search" role="search">
+        <input id="searchInput" type="search" placeholder="Qidiruv...">
+        <button id="searchBtn">Qidir</button>
+      </div>
+    </div>
+
+    <div class="top-right">
+      {% if user.is_authenticated %}
+        <div class="account-btn">Profil: {{ user.username }}</div>
+        <a href="{% url 'logout_page' %}" id="logout">log out</a>
+      {% else %}
+        <a class="account-btn" href="{% url 'login_page' %}">Sign in</a>
+      {% endif %}
+    </div>
+  </header>
+
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <h4>Katalog</h4>
+    <nav class="menu-list">
+      <div class="menu-item">Menyu 1</div>
+      <div class="menu-item">Menyu 2</div>
+      <div class="menu-item">Menyu 3</div>
+      <div class="menu-item">Menyu 4</div>
+      <div class="menu-item">Menyu 5</div>
+      <div class="menu-item">Menyu 6</div>
+      <div class="menu-item">Menyu 7</div>
+      <div class="menu-item">Menyu 8</div>
+      <div class="menu-item">Menyu 9</div>
+      <div class="menu-item">Menyu 10</div>
+    </nav>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+
+  <div id="cartWrapper">
+  <div id="cartIcon" class="cart-icon">
+    <h1>🛒</h1>
+  </div>
+  <span id="cartCounter">
+    {% if request.user.is_authenticated and cart %}
+      {{ cart.total_items }}
+    {% else %}
+      0
+    {% endif %}
+  </span>
+  </div>
+
+
+  <div id="cartModal" class="modal">
+    <span class="close">&times;</span>
+    <ul id="cartItems">
+      {% if cart %}
+        {% for item in cart.items.all %}
+          <li>{{ item.product.title }} x {{ item.quantity }} = {{ item.subtotal }} {{ item.product.currency.currency }}
+              <button class="remove-item" data-id="{{ item.id }}">X</button>
+          </li>
+        {% empty %}
+          <li>Savat bo'sh</li>
+        {% endfor %}
+      {% else %}
+        <li>Savat bo'sh</li>
+      {% endif %}
+    </ul>
+    <p>Total: <span id="cartTotal">{{ cart.total_price|default:0 }}</span></p>
+  </div>
+
+
+
+  <main class="main">
+    <section class="content">
+      <div class="products-grid" id="products">
+        {% for product in products %}
+        <article class="card" data-title="{{ product.title|lower }}" data-category="{{ product.category.name }}">
+          <img src="{{ product.img.url }}" alt="{{ product.title }}">
+          <div class="title">{{ product.title }}</div>
+          <div class="desc">{{ product.short_description }}</div>
+          <div class="price">{{ product.price }} {{ product.currency }}</div>
+          <div class="actions">
+            <a href="{% url 'product_details' product.publish.year product.publish.month product.publish.day product.slug %}" class="btn">Batafsil</a>
+            <button class="btn primary btn-add-cart" data-id="{{ product.id }}">Savatga qo'shish</button>
+          </div>
+        </article>
+        {% empty %}
+          <p>Mahsulot topilmadi</p>
+        {% endfor %}
+      </div>
+    </section>
+  </main>
+  <script src="{% static 'js/cart.js' %}"></script>
+  <script src="{% static 'js/sidebar.js' %}"></script>
+  <script src="{% static 'js/modal.js' %}"></script>
+  <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

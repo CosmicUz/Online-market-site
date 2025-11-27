@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="{% static 'css/signin.css' %}">
+</head>
+<body>
+<div class="signup-wrapper">
+    <div class="signup-container">
+        <h2 class="signup-title">Create Account</h2>
+        <form method="post" class="signup-form">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error-msg">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn-signup">Sign Up</button>
+        </form>
+        <p class="login-link">Already have an account? <a href="{% url 'login_page' %}">Sign in</a></p>
+    </div>
+</div>
+<script src="{% static 'js/signin.js' %}"></script>
+</body>
+</html>
